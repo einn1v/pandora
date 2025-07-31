@@ -85,7 +85,7 @@ if not is_linux():
         #     print("new file made!")
         print("temp data!!!!") # Passwords should be able to be recovered without hash in future versions!!!
 elif is_linux():
-    path = "usr/share"
+    path = "/usr/share"
     if not os.path.exists(os.path.join(path, "Pandora")):
         os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
         directory = os.path.join(path, "Pandora")
