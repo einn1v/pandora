@@ -1,4 +1,3 @@
-import os
 from setuptools import setup
 
 with open("requirements.txt") as file:
@@ -8,7 +7,7 @@ setup(
     name="pandora",
     description="Pandora is a CLI password manager for safe and efficient password management.",
     version="1.0.0",
-    packages=[],
+    py_modules=["main"],
     install_requires=reqs,
     entry_points={
         "console_scripts": [
