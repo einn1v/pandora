@@ -66,6 +66,12 @@ def get_input():
 def yn():
     log(f"{lightblue}[{reset}y{cyan}/{reset}n{lightblue}]{reset}")
 
+def success(message):
+    log(f"{lightgreen}SUCCESS{reset} {message}")
+
+def error(message):
+    log(f"{lightred}ERROR{reset} {message}")
+
 # File managment
 
 if not is_linux():
@@ -80,9 +86,6 @@ if not is_linux():
         directory = os.path.join(path, "Pandora")
 
     if not os.path.exists(os.path.join(directory, "hash.json")):
-        # with open(os.path.join(directory, "test.txt"), "w") as file:
-        #     file.write("helloworld helloworld")
-        #     print("new file made!")
         print("temp data!!!!") # Passwords should be able to be recovered without hash in future versions!!!
 elif is_linux():
     path = os.path.expanduser("~/.local/share")
@@ -199,7 +202,7 @@ def save_password(password, username=None, service=None):
         encrypted_password = ccp(bytes.fromhex(key)).encrypt(nonce, password.encode(), None)
     except Exception as e:
         print_banner() # Left here, password cannot be encrypted, its currently trying to encrypt a str value which it cannot do, should make sure that its a byte value tomorrow
-        log(f"{lightred}ERROR{reset} Unable to encrypt the password.")
+        error("Unable to encrypt the password.")
         log(f"Error details: {e}")
         get_input()
         return
@@ -221,7 +224,7 @@ def save_password(password, username=None, service=None):
             "nonce": nonce.hex()
         })
     except Exception:
-        log(f"{lightred}ERROR{reset} Something went wrong while saving the password. Please try again later.")
+        error("Something went wrong while saving the password. Please try again later.")
 
     with open(temp_path, "w") as file:
         json.dump(data, file) # No indent, it doesn't need to look pretty, only the machine is reading it
@@ -232,7 +235,7 @@ def log_passwords(showCount=True, expectContent=False):
             try:
                 data = json.load(file)
             except json.JSONDecodeError:
-                log("No passwords stored yet. You can create them from the menu.")
+                error("No passwords stored yet.")
                 return
         else:
             data = json.load(file)
@@ -317,7 +320,7 @@ def create_password():
         if get_input().lower() == "y":
             save_password(password, username, service)
             print_banner()
-            log(f"{lightgreen}SUCCESS{reset} Password saved successfully.")
+            success(f"Password saved successfully.")
         else:
             print_banner()
             log("Password not saved.")
@@ -330,7 +333,7 @@ def view_passwords():
     print_banner()
 
     def no_passwords():
-        log("No passwords stored yet. You can create them from the menu.")
+        error("No passwords stored yet.")
         get_input()
         menu()
 
@@ -359,7 +362,7 @@ def view_passwords():
             requested_index = int(choice) - 1
         except ValueError:
             if choice != "":
-                log(f"{lightred}ERROR{reset} Invalid input, please enter a number.")
+                success("Invalid input, please enter a number.")
                 get_input()
                 view_passwords()
             else:
@@ -374,7 +377,7 @@ def view_passwords():
         try:
             password = ccp(bytes.fromhex(key)).decrypt(requested_nonce, requested_password, None)
         except Exception:
-            log(f"{lightred}ERROR{reset} Unable to decrypt the password, please check your key.")
+            error("Unable to decrypt the password, please check your key.")
             get_input()
             return
 
@@ -412,7 +415,7 @@ def delete_password():
     print_banner()
 
     def no_passwords():
-        log("No passwords stored yet. You can create them from the menu.")
+        error("No passwords stored yet.")
         get_input()
         menu()
 
@@ -442,7 +445,7 @@ def delete_password():
 
         if requested_index < 0 or requested_index >= len(data):
             print_banner()
-            log(f"{lightred}ERROR{reset} Invalid input, please enter a valid number.")
+            error(f"Invalid input, please enter a valid number.")
             get_input()
             delete_password()
         
@@ -459,7 +462,7 @@ def delete_password():
                 json.dump(data, file)
             
             print_banner()
-            log(f"{lightgreen}SUCCESS{reset} Password for {lightblue}{requested_service if requested_service is not None else requested_username}{reset} deleted successfully.")
+            success(f"Password for {lightblue}{requested_service if requested_service is not None else requested_username}{reset} deleted successfully.")
             get_input()
             menu()
         else:
@@ -508,10 +511,10 @@ def menu(cls = True):
             if load_key() is None:
                 save_key(key)
                 print_banner()
-                log("Key saved successfully.")
+                success("Key saved successfully.")
             else:
                 print_banner()
-                log("You already have a key saved.")
+                error("You already have a key saved.")
 
             get_input()
             menu()
@@ -593,7 +596,7 @@ def main():
             get_input()
 
         print_banner()
-        log(f"{lightgreen}SUCCESS{reset} Profile setup completed.")
+        success("Profile setup completed.")
         log("Restart the application to continue.")
         exit(0)
 
@@ -605,11 +608,11 @@ def main():
 
         if verify_key(given_key):
             key = given_key
-            log("Key verified successfully!")
+            success("Key verified successfully.")
         else:
             print_banner()
             key = None
-            log(f"{lightred}ERROR")
+            error("")
             log("Key couldn't be verified, please try again later.")
             log("If you lost your key, you can delete your profile by typing 'DELETE'.")
 
