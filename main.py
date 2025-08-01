@@ -88,9 +88,8 @@ elif is_linux():
     path = "/usr/share"
     if not os.path.exists(os.path.join(path, "Pandora")):
         os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
-        directory = os.path.join(path, "Pandora")
-    else:
-        directory = os.path.join(path, "Pandora")
+        
+    directory = os.path.join(path, "Pandora")
 
 # Key managment
 
@@ -531,6 +530,13 @@ def main():
             else:
                 os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
                 directory = os.path.join(path, "Pandora")
+    elif is_linux():
+        path = "/usr/share"
+        
+        if not os.path.exists(os.path.join(path, "Pandora")):
+            os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
+            
+        directory = os.path.join(path, "Pandora")
 
     # First time startup!!
 
