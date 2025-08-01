@@ -587,6 +587,11 @@ def main():
 
             get_input()
 
+        print_banner()
+        log(f"{lightgreen}SUCCESS{reset} Profile setup completed.")
+        log("Restart the application to continue.")
+        exit(0)
+
     if load_key() is None:
         print_banner()
         log("You don't have a key saved, please enter your key to continue.")
