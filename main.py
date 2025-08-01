@@ -86,6 +86,13 @@ if not is_linux():
         print("temp data!!!!") # Passwords should be able to be recovered without hash in future versions!!!
 elif is_linux():
     path = "~/.local/share"
+
+    if not os.path.exists("~/.local"):
+        os.makedirs("~/.local", exist_ok=True)
+
+    if not os.path.exists("~/.local/share"):
+        os.makedirs("~/.local/share", exist_ok=True)
+
     if not os.path.exists(os.path.join(path, "Pandora")):
         os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
         
@@ -533,6 +540,12 @@ def main():
     elif is_linux():
         path = "~/.local/share"
         
+        if not os.path.exists("~/.local"):
+            os.makedirs("~/.local", exist_ok=True)
+
+        if not os.path.exists("~/.local/share"):
+            os.makedirs("~/.local/share", exist_ok=True)
+
         if not os.path.exists(os.path.join(path, "Pandora")):
             os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
             
