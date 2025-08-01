@@ -1,7 +1,7 @@
 import os
 from setuptools import setup
 
-with open(os.path.dirname(__file__), "requirements.txt") as file:
+with open("requirements.txt") as file:
     reqs = file.read().splitlines()
 
 setup(
