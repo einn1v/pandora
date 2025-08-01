@@ -208,15 +208,20 @@ def save_password(password, username=None, service=None):
         with open(os.path.join(temp_path), "r") as file:
             try:
                 data = json.load(file)
-            except json.JSONDecodeError:
+            except Exception:
                 data = []
-    
-    data.append({
-        "service": service if service else None,
-        "username": username if username else None,
-        "password": encrypted_password.hex(),
-        "nonce": nonce.hex()
-    })
+    else:
+        data = []
+
+    try:
+        data.append({
+            "service": service if service else None,
+            "username": username if username else None,
+            "password": encrypted_password.hex(),
+            "nonce": nonce.hex()
+        })
+    except Exception:
+        log(f"{lightred}ERROR{reset} Something went wrong while saving the password. Please try again later.")
 
     with open(temp_path, "w") as file:
         json.dump(data, file) # No indent, it doesn't need to look pretty, only the machine is reading it
@@ -622,6 +627,7 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except (Exception, KeyboardInterrupt):
+    except (Exception, KeyboardInterrupt) as e:
         print(f"{reset}")
+        print(e)
         sys.exit(0)
