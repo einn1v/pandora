@@ -630,7 +630,12 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except (Exception, KeyboardInterrupt) as e:
+    except (Exception, KeyboardInterrupt):
         print(f"{reset}")
-        print(e)
         sys.exit(0)
+
+    # FULL SCRIPT ERROR HANDLING, ONLY USED FOR DEBUGGING
+    # except (Exception, KeyboardInterrupt) as e:
+    #     print(f"{reset}")
+    #     print(e)
+    #     sys.exit(0)
