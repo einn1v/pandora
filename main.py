@@ -82,8 +82,8 @@ if not is_linux():
         directory = os.path.join(path)
     
     else:
-        os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
-        directory = os.path.join(path, "Pandora")
+        os.makedirs(os.path.join(path, "pandora"), exist_ok=True)
+        directory = os.path.join(path, "pandora")
 
     if not os.path.exists(os.path.join(directory, "hash.json")):
         print("temp data!!!!") # Passwords should be able to be recovered without hash in future versions!!!
@@ -93,10 +93,10 @@ elif is_linux():
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=True)
 
-    if not os.path.exists(os.path.join(path, "Pandora")):
-        os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
+    if not os.path.exists(os.path.join(path, "pandora")):
+        os.makedirs(os.path.join(path, "pandora"), exist_ok=True)
         
-    directory = os.path.join(path, "Pandora")
+    directory = os.path.join(path, "pandora")
 
 # Key managment
 
@@ -532,7 +532,7 @@ def main():
     if not is_linux():
         path = os.environ.get("APPDATA")
 
-        if not os.path.exists(os.path.join(path, "Pandora")):
+        if not os.path.exists(os.path.join(path, "pandora")):
 
             if not path:
                 os.makedirs("stored", exist_ok=True)
@@ -540,18 +540,18 @@ def main():
                 directory = os.path.join(path)
             
             else:
-                os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
-                directory = os.path.join(path, "Pandora")
+                os.makedirs(os.path.join(path, "pandora"), exist_ok=True)
+                directory = os.path.join(path, "pandora")
     elif is_linux():
         path = os.path.expanduser("~/.local/share")
         
         if not os.path.exists(path):
             os.makedirs(path, exist_ok=True)
 
-        if not os.path.exists(os.path.join(path, "Pandora")):
-            os.makedirs(os.path.join(path, "Pandora"), exist_ok=True)
+        if not os.path.exists(os.path.join(path, "pandora")):
+            os.makedirs(os.path.join(path, "pandora"), exist_ok=True)
             
-        directory = os.path.join(path, "Pandora")
+        directory = os.path.join(path, "pandora")
 
     # First time startup!!
 
