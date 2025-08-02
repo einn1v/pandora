@@ -72,7 +72,7 @@ pip install --break-system-packages -r requirements.txt
 python main.py
 ```
 
-- You can now rename and move the main.py file for easier access to run it where ever you want.
+- You can now rename and move the ``main.py`` file for easier access to run it where ever you want.
 
 Congrats!
 You've just installed pandora on linux.
