@@ -23,7 +23,7 @@ git clone https://github.com/einn1v/pandora.git
 cd pandora
 ```
 
-- Install the required dependency:
+- Install the required dependencies:
 
 ```sh
 pip install -r requirements.txt
