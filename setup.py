@@ -1,3 +1,5 @@
+import os
+import shutil
 from setuptools import setup
 
 with open("requirements.txt") as file:
@@ -16,3 +18,9 @@ setup(
         ]
     }
 )
+
+if os.name == "posix":
+    src = os.path.join(os.path.dirname(__file__), "main.py")
+    dst = os.path.expanduser("~/pdr.py")
+    
+    shutil.move(src, dst)
