@@ -18,9 +18,3 @@ setup(
         ]
     }
 )
-
-if os.name == "posix":
-    src = os.path.join(os.path.dirname(__file__), "main.py")
-    dst = os.path.expanduser("~/pdr.py")
-    
-    shutil.move(src, dst)
