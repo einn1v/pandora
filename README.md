@@ -63,7 +63,7 @@ cd pandora
 - Install the required dependencies:
 
 ```sh
-pip install -r requirements.txt
+pip install --break-system-packages -r requirements.txt
 ```
 
 - Run the ``setup.py`` file to initialize the main script to the ``~/`` or ``user`` directory:
