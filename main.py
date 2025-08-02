@@ -201,7 +201,7 @@ def save_password(password, username=None, service=None):
     try:
         encrypted_password = ccp(bytes.fromhex(key)).encrypt(nonce, password.encode(), None)
     except Exception as e:
-        print_banner() # Left here, password cannot be encrypted, its currently trying to encrypt a str value which it cannot do, should make sure that its a byte value tomorrow
+        print_banner()
         error("Unable to encrypt the password.")
         log(f"Error details: {e}")
         get_input()
@@ -386,27 +386,22 @@ def view_passwords():
         if service is None:
             if "@" in username:
                 logc("Email", username)
-                # log(f"{lightblue}[ {reset}Email {cyan}] {lightblue}> {reset}{username}")
             else:
                 logc("Username", username)
-                # log(f"{lightblue}[ {reset}Username {cyan}] {lightblue}> {reset}{username}")
+
         elif username is None:
             logc("Service", service)
         else:
             logc("Service", service)
-            # log(f"{lightblue}[ {reset}Service {cyan}] {lightblue}  > {reset}{service}")
             log("")
 
             if "@" in username:
                 logc("Email", username)
-                # log(f"{lightblue}[ {reset}Email {cyan}] {lightblue} > {reset}{username}")
             else:
                 logc("Username", username)
-                # log(f"{lightblue}[ {reset}Username {cyan}] {lightblue} > {reset}{username}")
         
         log("")
         logc("Password", password.decode())
-        # log(f"{lightblue}[ {reset}Password {cyan}] {lightblue} > {reset}{password.decode()}")
 
         get_input()
         menu()
@@ -526,106 +521,112 @@ def menu(cls = True):
 def main():
     global directory
 
-    print_banner()
+    try:
+        print_banner()
 
-    # Checks for file system to setup directory
-    if not is_linux():
-        path = os.environ.get("APPDATA")
+        # Checks for file system to setup directory
+        if not is_linux():
+            path = os.environ.get("APPDATA")
 
-        if not os.path.exists(os.path.join(path, "pandora")):
+            if not os.path.exists(os.path.join(path, "pandora")):
 
-            if not path:
-                os.makedirs("stored", exist_ok=True)
-                path = "stored\\"
-                directory = os.path.join(path)
+                if not path:
+                    os.makedirs("stored", exist_ok=True)
+                    path = "stored\\"
+                    directory = os.path.join(path)
+                
+                else:
+                    os.makedirs(os.path.join(path, "pandora"), exist_ok=True)
+                    directory = os.path.join(path, "pandora")
+        elif is_linux():
+            path = os.path.expanduser("~/.local/share")
             
-            else:
+            if not os.path.exists(path):
+                os.makedirs(path, exist_ok=True)
+
+            if not os.path.exists(os.path.join(path, "pandora")):
                 os.makedirs(os.path.join(path, "pandora"), exist_ok=True)
-                directory = os.path.join(path, "pandora")
-    elif is_linux():
-        path = os.path.expanduser("~/.local/share")
-        
-        if not os.path.exists(path):
-            os.makedirs(path, exist_ok=True)
+                
+            directory = os.path.join(path, "pandora")
 
-        if not os.path.exists(os.path.join(path, "pandora")):
-            os.makedirs(os.path.join(path, "pandora"), exist_ok=True)
+        # First time startup!!
+
+        if not os.path.exists(os.path.join(directory, "hash.json")):
+            log("This seems to be your first time running Pandora,")
+            log("We will setup your profile now.")
+
+            global key
+            key = ccp.generate_key()
+
+            with open(os.path.join(directory, "hash.json"), "w") as file:
+                nonce = os.urandom(12)
+                encrypted_hash = ccp(key).encrypt(nonce, default_hash, None)
+
+                json.dump({
+                    "nonce": nonce.hex(),
+                    "hash": encrypted_hash.hex(),
+                }, file)
+                file.close()
             
-        directory = os.path.join(path, "pandora")
-
-    # First time startup!!
-
-    if not os.path.exists(os.path.join(directory, "hash.json")):
-        log("This seems to be your first time running Pandora,")
-        log("We will setup your profile now.")
-
-        global key
-        key = ccp.generate_key()
-
-        with open(os.path.join(directory, "hash.json"), "w") as file:
-            nonce = os.urandom(12)
-            encrypted_hash = ccp(key).encrypt(nonce, default_hash, None)
-
-            json.dump({
-                "nonce": nonce.hex(),
-                "hash": encrypted_hash.hex(),
-            }, file)
-            file.close()
-        
-        log("")
-        logf(f" Key {lightblue}>{reset} {key.hex()}")
-        log("")
-        log("This is your encryption key, keep it somewhere safe and private.")
-        log("This key will be used to view your passwords.")
-        log("")
-        log("Do you want to save the key locally?")
-        log("Recommended for easier access, but less secure if the device is compromised.")
-        yn()
-
-        if get_input().lower() == "y":
-            save_key(key)
-        else:
-            print_banner()
-            log(f"{lightred}WARNING")
-            log("Please note that if you don't save the key somewhere, you will not be able to access your passwords later.")
             log("")
             logf(f" Key {lightblue}>{reset} {key.hex()}")
             log("")
-            log("If you've made sure that the key is saved, press Enter.")
+            log("This is your encryption key, keep it somewhere safe and private.")
+            log("This key will be used to view your passwords.")
+            log("")
+            log("Do you want to save the key locally?")
+            log("Recommended for easier access, but less secure if the device is compromised.")
+            yn()
 
-            get_input()
+            if get_input().lower() == "y":
+                save_key(key)
+            else:
+                print_banner()
+                log(f"{lightred}WARNING")
+                log("Please note that if you don't save the key somewhere, you will not be able to access your passwords later.")
+                log("")
+                logf(f" Key {lightblue}>{reset} {key.hex()}")
+                log("")
+                log("If you've made sure that the key is saved, press Enter.")
 
-        print_banner()
-        success("Profile setup completed.")
-        log("Restart the application to continue.")
-        exit(0)
+                get_input()
 
-    if load_key() is None:
-        print_banner()
-        log("You don't have a key saved, please enter your key to continue.")
-        
-        given_key = get_input()
-
-        if verify_key(given_key):
-            key = given_key
-            success("Key verified successfully.")
-        else:
             print_banner()
-            key = None
-            error("")
-            log("Key couldn't be verified, please try again later.")
-            log("If you lost your key, you can delete your profile by typing 'DELETE'.")
+            success("Profile setup completed.")
+            log("Restart the application to continue.")
+            exit(0)
 
-            if get_input() == "DELETE":
-                delete_profile()
-    else:
-        # print(type(load_key())) Debugging only
-        if verify_key(load_key().hex()):
-            key = load_key().hex()
+        if load_key() is None:
+            print_banner()
+            log("You don't have a key saved, please enter your key to continue.")
+            
+            given_key = get_input()
 
-    if key:
-        print_banner()
-        menu(False)
+            if verify_key(given_key):
+                key = given_key
+                success("Key verified successfully.")
+            else:
+                print_banner()
+                key = None
+                error("")
+                log("Key couldn't be verified, please try again later.")
+                log("If you lost your key, you can delete your profile by typing 'DELETE'.")
+
+                if get_input() == "DELETE":
+                    delete_profile()
+        else:
+            if verify_key(load_key().hex()):
+                key = load_key().hex()
+
+        if key:
+            print_banner()
+            menu(False)
+
+    except (Exception, KeyboardInterrupt):
+        print(f"{reset}")
+        sys.exit(0)
+
+        # ^^^^ Preventing KeyboardInterrupt errors should you close the script with Ctrl + C
 
 if __name__ == "__main__":
     try:
