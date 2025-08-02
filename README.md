@@ -66,20 +66,16 @@ cd pandora
 pip install --break-system-packages -r requirements.txt
 ```
 
-- Run the ``setup.py`` file to initialize the main script to the ``~/`` or ``user`` directory:
+- Run ``main.py``, this will run pandora for the first time:
 
 ```sh
-python setup.py
+python main.py
 ```
 
-- Navigate to the user directory (This is the default path your terminal opens, the pandora file will be initialized here for easier access)
-
-```sh
-cd ~
-```
+- You can now rename and move the main.py file for easier access to run it where ever you want.
 
 Congrats!
-You've just installed pandora on linux, you can now use pandora by opening a terminal and typing ``python pdr.py``
+You've just installed pandora on linux.
 
 ### Note
 I've documented various parts of the code with comment lines, feel free to learn from this script.
