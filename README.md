@@ -29,6 +29,12 @@ cd pandora
 pip install -r requirements.txt
 ```
 
+- Enable commands before initializing them:
+
+```sh
+pip install -e .
+```
+
 - Run the ``setup.py`` file to initialize the user commands:
 
 ```sh
