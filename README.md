@@ -37,3 +37,7 @@ python setup.py
 
 Congrats!
 You've just installed pandora, you can now use the commands ``pandora``, ``pdr`` to start the program.
+
+
+### Note
+I've documented various parts of the code with comment lines, feel free to learn from this script.
